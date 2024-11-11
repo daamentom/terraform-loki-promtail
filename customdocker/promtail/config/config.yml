@@ -1,0 +1,27 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://172.17.0.4:3100/loki/api/v1/push #docker default bridge network
+
+scrape_configs:
+- job_name: local
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: varlogs
+      __path__: /var/log/*log 
+- job_name: nodejs-logs
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: nodejs-app
+      host: 172.17.0.6
+      __path__: /mnt/logs/nodejs/*.log 
+

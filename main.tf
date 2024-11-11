@@ -140,6 +140,15 @@ resource "aws_security_group" "grafana" {
     from_port = 3200
     to_port = 3200
     protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # you should change this. really.
+  }
+
+  ingress {
+    description = "nodelogger"
+    from_port = 8888
+    to_port = 8888
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # you should change this. really.
   }
 
   egress {
@@ -220,7 +229,24 @@ resource "aws_ecs_task_definition" "grafana" {
           containerPath = "/promtail",
         }
       ]
-    }
+    },
+    {
+      name      = "nodelogger",
+      image     = "custom/nodelogger:latest",
+      essential = true,
+      portMappings =[
+        {
+          containerPort = 8888,
+          hostPort = 8888
+        }
+      ],
+      mountPoints = [
+        {
+          sourceVolume  = "efs_volume",
+          containerPath = "/nodelogger",
+        }
+      ]
+    },
   ])
 
   volume {
