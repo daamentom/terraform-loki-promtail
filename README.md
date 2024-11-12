@@ -26,3 +26,5 @@ om te testen in de promtail container:
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 51f7f388f37c     
 (loki contianer-id)
 
+nodelogger heeft package.json nodig om gebuild te worden.
+
